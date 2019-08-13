@@ -1,0 +1,219 @@
+body {
+  margin: 0;
+  background-color: #f5f5f5;
+  font-family: 'Roboto', sans-serif;
+}
+ul {
+  margin: 0;
+  padding: 0;
+}
+li {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+a {
+  text-decoration: none;
+  color: #000000;
+}
+.container {
+  padding: 0 15px;
+  max-width: 1170px;
+  margin: 0 auto;
+}
+header {
+  background-color: #3A356D;
+  padding: 20px 0;
+  margin: 0 0 20px;
+  position: sticky;
+}
+header a {
+  color: #ffffff;
+}
+header a:hover {
+  text-decoration: underline;
+}
+header .container:before,
+header .container:after {
+  content: " ";
+  display: table;
+}
+header .container:after {
+  clear: both;
+}
+header .container .navbar-brand {
+  font-style: italic;
+  font-size: 18px;
+}
+header .container .navbar ul {
+  display: none;
+}
+header .container .navbar li {
+  font-size: 16px;
+  padding: 0 15px;
+}
+@media (min-width: 767px) {
+  header {
+    margin: 0 0 40px;
+  }
+  header .navbar-brand {
+    float: left;
+  }
+  header .navbar {
+    float: right;
+  }
+  header .navbar ul {
+    display: flex;
+  }
+}
+@media (min-width: 767px) {
+  .product-lists-container {
+    margin: 0 -15px;
+  }
+}
+@media (min-width: 767px) {
+  .all-products.grid-view {
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .all-products.grid-view li {
+    -webkit-box-shadow: 5px 5px 10px #999999;
+    box-shadow: 5px 5px 10px #999999;
+    margin: 15px;
+    width: calc(100%/3 - 30px);
+  }
+  .all-products.list-view li {
+    -webkit-box-shadow: 0 5px 10px #999999;
+    box-shadow: 0 5px 10px #999999;
+    padding: 15px;
+  }
+  .all-products.list-view li:before,
+  .all-products.list-view li:after {
+    content: " ";
+    display: table;
+  }
+  .all-products.list-view li:after {
+    clear: both;
+  }
+  .all-products.list-view li img,
+  .all-products.list-view li .product-details {
+    float: left;
+  }
+  .all-products.list-view li img {
+    width: auto;
+  }
+}
+.all-products li {
+  -webkit-box-shadow: 0 5px 5px #999999;
+  box-shadow: 0 5px 5px #999999;
+  background-color: #ffffff;
+  margin-bottom: 15px;
+  position: relative;
+}
+.all-products li > a,
+.all-products li img {
+  width: 100%;
+}
+.all-products li .product-details {
+  padding: 15px;
+}
+.all-products li .product-name {
+  padding-bottom: 15px;
+  text-transform: capitalize;
+  font-size: 20px;
+  color: #3A356D;
+}
+.all-products li .product-size {
+  padding-bottom: 15px;
+  font-size: 16px;
+}
+.all-products li .stars {
+  background: url("../images/star.png");
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  vertical-align: text-top;
+}
+.all-products li .price-section {
+  padding-top: 15px;
+}
+.all-products li .actual-price {
+  font-size: 30px;
+  color: #3A356D;
+  font-weight: bold;
+}
+.all-products li .old-price {
+  text-decoration: line-through;
+  color: #666;
+  font-size: 18px;
+  padding: 0 10px;
+}
+.all-products li .saving {
+  text-transform: capitalize;
+  font-size: 18px;
+  color: #F0CE4A;
+}
+.all-products li .fav-icon {
+  position: absolute;
+  right: 10px;
+  top: 10px;
+  border: 1px solid #800080;
+  background-color: #ffffff;
+  color: #800080;
+  padding: 10px;
+  border-radius: 20px;
+  font-size: 16px;
+}
+.product-filter:before,
+.product-filter:after {
+  content: " ";
+  display: table;
+}
+.product-filter:after {
+  clear: both;
+}
+.product-filter .filter-data {
+  margin-right: 20px;
+}
+.product-filter .total-products-wrapper {
+  font-size: 18px;
+  font-weight: bold;
+  color: #3A356D;
+}
+.product-filter .total-products-wrapper,
+.product-filter .collection-sort {
+  float: left;
+}
+.product-filter .sort {
+  float: right;
+}
+.product-filter select {
+  border: 1px solid #3A356D;
+}
+.product-filter .view-type {
+  display: none;
+}
+@media (min-width: 767px) {
+  .product-filter select {
+    width: 150px;
+    height: 30px;
+  }
+  .product-filter .view-type {
+    float: right;
+    font-size: 30px;
+    margin-right: 20px;
+    color: #3A356D;
+    cursor: pointer;
+    display: block;
+  }
+  .product-filter .view-type:hover {
+    color: #800080;
+  }
+}
+footer {
+  background-color: #3A356D;
+  color: #ffffff;
+}
+footer .footer-copyright {
+  padding: 20px 0;
+}
