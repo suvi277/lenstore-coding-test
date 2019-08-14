@@ -1,55 +1,36 @@
+* {
+  box-sizing: border-box; }
+
 form {
-  margin: 20px;
-  width: 50%;
-}
-fieldset {
-  margin: 0;
+  margin: 20px auto;
+  width: 50%; }
+  form .search-box {
+    position: relative; }
+  form input {
+    width: 100%;
+    margin: 0;
+    padding: 15px; }
+  form button {
+    position: absolute;
+    right: 0;
+    padding: 17px;
+    background-color: #33b6d1;
+    color: #fff;
+    border: 0;
+    top: 0; }
+
+.autocomplete-results {
   border: 1px solid #ccc;
-  padding-bottom: 1em;
-}
-legend {
-  font-weight: bold;
-  text-transform: uppercase;
-}
-fieldset ul {
+  display: none;
   margin: 0;
-  padding: 0;
-  list-style: none;
-}
-fieldset ul li {
-  padding: 4px 0;
-  margin-bottom: 20px;
-}
-fieldset ul li::after {
-  display: table;
-  content: "";
-  clear: both;
-}
-label {
-  float: left;
-  padding-right: 50px;
-  font-weight: bold;
-  width: 100px;
-}
-input {
-  font: 14px Verdana, sans-serif;
-  float: left;
-  width: 220px;
-  border: 1px solid #ccc;
-}
-button {
-  background: #ccc;
-  padding: 15px;
-  font-size: 14px;
-  font-weight: bold;
-  margin-top: 10px;
-}
-.error {
-  clear: left;
-  margin-left: 150px;
-  color: red;
-}
-.input-error {
-  background: #ccc;
-  border: 1px solid red;
-}
+  padding: 0; }
+  .autocomplete-results li {
+    list-style: none;
+    padding: 10px 15px; }
+  .autocomplete-results a {
+    color: #333;
+    text-decoration: none; }
+  .autocomplete-results .product-count {
+    color: #666;
+    font-size: 12px;
+    float: right; }

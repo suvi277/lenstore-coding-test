@@ -1,3 +1,5 @@
+const sass = require('node-sass');
+
 module.exports = function(grunt) {
   grunt.initConfig({
     connect: {
@@ -8,22 +10,17 @@ module.exports = function(grunt) {
           }
         }
       },
-    less: {
-      development: {
+    sass: {
+      dist: {                            
         options: {
-          paths: ["app/css"]
+          implementation: sass,             
+          style: 'expanded'
         },
-        files: [{
-                  src: "src/less/main.less",
-                  dest: "app/css/main.css"
-                },{
-                  src: "src/less/form.less",
-                  dest: "app/css/form.css"
-                }]
-      },
-      watch: {
-        files: "*.less",
-        tasks: ["less"]
+        files: {
+          'app/css/main.css' : 'src/sass/main.scss',
+          'app/css/form.css' : 'src/sass/form.scss',
+          'app/css/progress.css' : 'src/sass/progress.scss'
+        }
       }
     },
     concat: {
@@ -33,15 +30,6 @@ module.exports = function(grunt) {
       dist: {
         src: ['src/scripts/*.js'],
         dest: 'app/js/app.js'
-      }
-    },
-    uglify : {
-      options : {
-        banner : "/*! app.min.js file */\n"
-      },
-      build : {
-        src : ["app/js/app.js"],
-        dest : "app/js/app.min.js"
       }
     },
     copy: {
@@ -68,8 +56,8 @@ module.exports = function(grunt) {
           spawn: false,
           event: ['added','deleted','changed']
         },
-        files:['**/*.less', 'src/scripts/*.js', '**/*.json'],
-        tasks:['less', 'concat', 'uglify', 'copy']
+        files:['**/*.scss', 'src/scripts/*.js', '**/*.json'],
+        tasks:['sass', 'concat', 'copy']
       }
     },
     jasmine: {
@@ -81,14 +69,13 @@ module.exports = function(grunt) {
         }
     }
   });
-  grunt.loadNpmTasks('grunt-contrib-less');
+
+  grunt.loadNpmTasks('grunt-sass');
   grunt.loadNpmTasks('grunt-contrib-watch');
   grunt.loadNpmTasks('grunt-contrib-connect');
   grunt.loadNpmTasks('grunt-contrib-concat');
-  grunt.loadNpmTasks('grunt-contrib-uglify');
   grunt.loadNpmTasks('grunt-contrib-copy');
   grunt.loadNpmTasks('grunt-contrib-jasmine');
 
-  grunt.registerTask('default', ['connect:server', 'concat', 'uglify', 'less', 'copy', 'watch']);
-  grunt.registerTask('test', ['jasmine']);
+  grunt.registerTask('default', ['connect:server', 'concat', 'sass', 'copy', 'watch']);
 };

@@ -1,0 +1,184 @@
+@import "variable";
+@import "mixins";
+
+
+body {
+	margin: 0;
+	font-family: $font-family-base;
+}
+
+ul {
+	margin: 0;
+	padding: 0;
+}
+
+li {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+a {
+	text-decoration: none;
+	color: $color-black;
+}
+
+.container {
+	max-width: 990px;
+	margin: 0 auto;
+}
+
+header {
+	padding: 20px 0;
+	margin: 0 0 20px;
+	border-bottom: 2px solid $color-grey-1;
+
+	img {
+		width: 80%;
+	}
+
+	.container {
+		@include clearfix;
+	}
+
+	@media #{$tablet-down} {
+		margin: 0 0 40px;
+
+		.navbar-brand {
+			float: left;
+		}
+	}
+}
+
+.product-brands {
+	h1 {
+		color: $color-blue;
+		padding: 10px;
+	}
+
+	.brand-image {
+		padding: 5px 5px;
+		display: inline-block;
+		width: 30%;
+		vertical-align: middle;
+		
+		img {
+			width: 100%;
+		}
+	}
+
+	@media #{$tablet-down} {
+		.brands-list {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+		}
+		
+		.brand-image {
+			padding: 0 10px;
+			width: auto;
+		}
+	}
+}
+
+.product-lists-container {
+	margin: 30px 0;
+
+	.products-tabs {
+		li {
+			text-align: center;
+			background-color: $color-blue-1;
+			padding: 15px;
+			cursor: pointer;
+
+			&:hover {
+				background-color: $color-blue-1-hover;
+			}
+
+			&.active {
+				background-color: transparent;
+				border-top: 1px solid $color-grey-2;
+				cursor: default;
+
+				&:hover {
+					background-color: transparent;
+				}
+			}
+
+			> a {
+				color: $color-grey-3;
+			}
+		}
+
+		@media #{$tablet-down} {
+			display: table;
+			width: 100%;
+	
+			li {
+				display: table-cell;
+				border-left: 1px solid $color-grey-2;
+			}
+		}
+	}
+
+	.products-container {
+		border: 1px solid $color-grey-2;
+		border-top: 0;
+		padding: 10px;
+	}
+
+	.all-products {
+		@media #{$tablet-down} {
+			display: flex;
+				flex-wrap: wrap;
+
+			li {
+				padding: $gridSpacing;
+				width: calc(100%/4 - (#{$gridSpacing} * 2));
+
+				&:hover {
+					@include box-shadow(2px 2px 5px $color-grey-2);
+				}
+			}
+		}
+	
+		li {
+			margin-bottom: $gridSpacing;
+			position: relative;
+	
+			> a,
+			img {
+				width: 100%;
+			}
+	
+			.product-name {
+				padding-bottom: 15px;
+				text-transform: capitalize;
+				font-size: 16px;
+				color: $color-grey-3;
+				font-weight: bold;
+			}
+	
+			.product-seller {
+				padding-bottom: 15px;
+				font-size: 12px;
+				color: $color-grey-3;
+			}
+	
+			.product-count {
+				float: right;
+				font-size: 11px;
+				color: $color-grey-3;
+			}
+		}
+	}
+}
+
+footer {
+	background-color: $color-blue;
+	color: $color-white;
+
+	.footer-copyright {
+		padding: 20px 0;
+	}
+}

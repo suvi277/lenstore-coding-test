@@ -5,82 +5,47 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>PLP - product listing page</title>
+  <title>Assesement Solution Instruction</title>
   <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
   <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/main.css">
 </head>
 <body>
 	<header>
 	    <div class="container">
-	        <a class="navbar-brand" href="index.html">Simple Ecommerce</a>
+				<a class="navbar-brand" href="https://www.lenstore.co.uk/" title="Lenstore.co.uk" ><img src="./images/default.gif" alt="Lenstore.co.uk"></a>
 	    </div>
 	</header>
 	<main class="container">
-		<section class="product-filter">
-			<h1>Product Listing Page</h1>
-			<div class="total-products-wrapper">
-				<span class="total-products"></span>
-				<span> results</span>
-			</div>
-			<div class="sort">
-				<div class="collection-sort filter-data">
-					<select data-type="size">
-				      <option value="/">Filter By Size</option>
-				      <option value="M">M</option>
-				      <option value="XL">XL</option>
-				      <option value="L">L</option>
-				      <option value="S">S</option>
-				      <option value="XS">XS</option>
-				   	</select>
-				</div>
-				<div class="collection-sort sort-data">
-					<select>
-				      <option value="asc-name">Alphabetically, A-Z</option>
-				      <option value="desc-name">Alphabetically, Z-A</option>
-				      <option value="asc-price">Price, low to high</option>
-				      <option value="desc-price">Price, high to low</option>
-				    </select>
-				</div>
-			</div>
-			<div class="view-type fa fa-list-alt"></div>
-		</section>
-		<section class="product-lists-container">
-			<ul class="all-products grid-view">
+		<section class="practical-test">
+			<h1>Navigation Link to the task</h1>
+			<h2>HTML & CSS Practical Test</h2>
+			<ul>
+				<li>
+					<p>Task 1 & Task 2 are done in below link, it is done by html & css3 using section-1.png</p>
+					<a href="./section-1.html" target="_blank">Section-1</a>
+				</li>
+				<li>
+					<p>Task 3 is done in below link, it is done only by html for markup using section-2.png</p>
+					<a href="./section-2.html" target="_blank">Section-2</a>
+				</li>
+				<li>
+					<p>Task 4 are done in below link, it is done by html & css3 using section-3.png <strong>Only HTML</strong></p>
+					<a href="./section-3.html" target="_blank">Section-3</a>
+				</li>
+			</ul>
+			<h2>Javascript Practical Test</h2>
+			<ul>
+				<li>
+					<p>Task 1 - <strong>Autocomplete functionality of Search </strong> are done in below link, it is done by javascript using section-4.png</p>
+					<a href="./section-4.html" target="_blank">Section-4</a>
+				</li>
+				<li>
+					<p>Task 2 - <strong>JS code for the track method</strong> is done and <strong>And check console in this page</strong>></p>
+					<a href="../src/scripts/main.js" target="_blank">Main JS</a>
+				</li>
 			</ul>
 		</section>
 	</main>
-	<footer class="page-footer">
-		<div class="container">
-			<div class="footer-copyright">© 2018 Copyright:</div>
-		</div>
-	</footer>
-	<script id="products-template" type="x-handlebars-template">​
-		{{#each this}}
-			<li class="products-card">
-				<a href="{{url}}" title="{{name}}">
-					<img src="{{picture}}" alt="{{name}}"/>
-					<div class="product-details">
-						<div class="product-name">{{name}}</div>
-						<span class="product-size">{{size}}</span>
-						{{#times rating}}
-							<span class="stars"></span>
-						{{/times}}
-						<div class="price-section">
-							<span class="actual-price">{{price}}</span>
-							<span class="old-price">{{oldPrice}}</span>
-							{{#if savings}}
-								<span class="saving">You save {{savings}}</span>
-							{{/if}}
-						</div>
-					</div>
-					<div class="fav-icon fa-heart {{#if isFav}}fas {{else}} far {{/if}}"></div>
-				</a>
-			</li>
-		{{/each}}
-	</script>	
-	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-	<script src="//cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
-	<script src="js/app.min.js"></script>
+	<script src="js/app.js"></script>
 </body>
 </html>

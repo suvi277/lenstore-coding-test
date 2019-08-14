@@ -1,193 +1,169 @@
-var Validator = function(form) {
+var AutoComplete = function(form) {
     this.form = document.getElementById(form);
-    
-    this.formElements = {
-        name: {
-            reg: /^[a-zA-Z]{2,20}$/,
-            msg: 'Please enter valid Name'
-        },
-
-        surname: {
-            reg: /^[a-zA-Z]{2,20}$/,
-            msg: 'Please Enter valid Surname.'
-        },
-
-        email: {
-            reg: /^[a-z-0-9_+.-]+\@([a-z0-9-]+\.)+[a-z0-9]{2,7}$/i,
-            msg: 'Please Enter valid e-mail address.'
-        },
-
-        phone: {
-            reg: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
-            msg: 'Please enter a valid phone number'
-        },
-        password: {
-            reg:  /^(?=.*?[^\w\s]).{8,}$/,
-            msg: 'Must contain at least one special character and at least 8 or more characters'
-        }
-    };
+    this.input = document.querySelector('input');
+    this.resultContainer = document.getElementById("autocomplete-results");
 };
 
-Validator.prototype.bindEvents = function() {
-    if (this.form) {
-        this.form.addEventListener('submit', function(evt){
-            evt.preventDefault();
+AutoComplete.prototype.bindEvents = function() {
+    if (this.input) {
+        this.input.addEventListener('keyup', function(evt) {
+            input_val = evt.target.value;
 
-            for (var inputElem in this.formElements) {
-                this.validate(inputElem);
+        if (input_val.length > 2) {
+            this.resultContainer.innerHTML = '';
+            this.populateResult(input_val);
+        } else {
+            this.resultContainer.innerHTML = '';
+            this.resultContainer.style.display = 'none';
+        }
+        
+        }.bind(this));
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest('form')) {
+                this.closeAutoCompleteList();
             }
         }.bind(this));
     }
 };
 
-Validator.prototype.validate = function(inputElem) {
-    var currentIpField = this.formElements[inputElem],
-        inputVal = document.getElementById(inputElem).value;
-    
-    if (!currentIpField.reg.test(inputVal)) {
-        this.handleError(inputElem, currentIpField.msg);
-    }
+AutoComplete.prototype.populateResult = function(val) {
+    var filteredData= [];
+
+    window.requestXHR = new XMLHttpRequest();
+
+    window.requestXHR.abort();
+    window.requestXHR.onreadystatechange = function(evt) {
+        if (evt.currentTarget.readyState == 4 && evt.currentTarget.status == 200) {
+            var response = JSON.parse(evt.currentTarget.responseText);
+
+            filteredData = response.filter(function(data) {
+                return data.label.toUpperCase().includes(val.toUpperCase());
+            });
+
+            for (var i = 0; i < filteredData.length; i++) {
+                this.createList(filteredData[i], val);
+            }
+        }
+    }.bind(this);
+
+    window.requestXHR.open("GET", "data/search-results.json");
+    window.requestXHR.send();
 };
 
-Validator.prototype.handleError = function(element, message) {
-    var inputField = document.getElementById(element),
-        liErrorMsg = inputField.nextElementSibling;
+AutoComplete.prototype.createList = function(currentData, val) {
+    var regex = new RegExp(val, 'gi'),
+        list,
+        link,
+        pName;
 
-    inputField.className = 'input-error';
-    liErrorMsg.innerText = message;
-    liErrorMsg.style.display = 'block';
+    pName = currentData.label.replace(regex, '<strong>' + val + '</strong>');
 
-    inputField.addEventListener('keyup', function(evt){
-        inputField.className = '';
-        liErrorMsg.style.display = 'none';
-    });
+    list = document.createElement('li');
+    link = document.createElement("a");
+    link.setAttribute('href', currentData.href);
+    link.innerHTML = pName;
+    link.innerHTML += '<span class="product-count">'+ currentData.duration + '</span>';
+    list.appendChild(link);
+
+    this.resultContainer.appendChild(list);
+    this.resultContainer.style.display = 'block';
+
+    list.addEventListener("click", function (e) {
+        e.preventDefault();
+        console.log(currentData);
+    }.bind(this));
 };
 
-var validator = new Validator('form');
-validator.bindEvents();
-;Handlebars.registerHelper('times', function(n, block) {
-    var accum = '';
-    for(var i = 0; i < n; ++i)
-        accum += block.fn(i);
-    return accum;
-});;'use strict';
+AutoComplete.prototype.closeAutoCompleteList = function() {
+    this.resultContainer.style.display = 'none';
+}
 
-(function () {
-	var PLP_APP = {
-    	"init": function () {
-    		this.allProducts = [];
-	    	this.loadProductsData();
-	    	this.bindEvents();
-	    },
-
-	    "loadProductsData": function function_name(argument) {
-			$.getJSON("data/products.json", function( data ) {
-				this.allProducts = data;
-				this.filteredData = data;
-				this.sortProducts('asc-name', data);
-			}.bind(this));
-	    },
-
-	    "getAllProducts": function() {
-	    	return this.allProducts;
-	    },
-
-	    "setFilteredProducts": function(filteredData) {
-	    	this.filteredData = filteredData;
-	    },
-
-	    "renderProducts": function(data) {
-	    	var list = $('.all-products'),
-	    		hbsTemplate = $("#products-template").html(),
-	    		compiledTpl;
-			
-			compiledTpl = Handlebars.compile(hbsTemplate);
-			list.html(compiledTpl(data));
-
-			this.renderTotalProductsText(data.length);
-	    },
-
-	    "renderTotalProductsText": function(total) {
-	    	$('.total-products').text(total);
-	    },
-
-	    "bindEvents": function() {
-	    	$('.filter-data select').on('change', function(event){
-	    		var value = $(event.currentTarget).val(),
-	    			type = $(event.currentTarget).data('type');
-
-	    		this.filterProducts(value, type);
-	    	}.bind(this));
-
-	    	$('.sort-data select').on('change', function(event){
-	    		var value = $(event.currentTarget).val();
-
-	    		this.sortProducts(value, this.filteredData);
-	    	}.bind(this));
-
-	    	$('.view-type').on('click', function(event) {
-	    		this.toggleView(event);
-	    	}.bind(this));
-	    },
-
-	    "filterProducts": function(value, type) {
-	    	var products;
-
-	    	products = this.getAllProducts().filter(function (item) {
-		        return item[type].includes(value) || value === '/';
-	        });
-
-	    	this.setFilteredProducts(products);
-	    	this.renderProducts(products);
-	    },
-
-	    "sortProducts": function(value, data) {
-	    	var products = data;
-
-	    	switch(value) {
-			  	case 'desc-name':
-				    products = products.sort(function (p1, p2) {
-						if (p1.name > p2.name) return -1;
-						if (p1.name < p2.name) return 1;
-					});
-
-			    break;
-			  	case 'asc-name':
-				   	products = products.sort(function (p1, p2) {
-						if (p1.name > p2.name) return 1;
-						if (p1.name < p2.name) return -1;
-					});
-
-			    break;
-			   	case 'desc-price':
-				    products = products.sort(function (p1, p2) {
-						if (p1.price > p2.price) return -1;
-						if (p1.price < p2.price) return 1;
-					});
-
-			    break;
-			  	case 'asc-price':
-				   	products = products.sort(function (p1, p2) {
-						if (p1.price > p2.price) return 1;
-						if (p1.price < p2.price) return -1;
-					});
-
-			    break;
-			  	default:
+var autocomplete = new AutoComplete('form');
+autocomplete.bindEvents();
+;var Events = {
+	list: function () {
+		return {
+			aw: {
+				name: 'Google AdWords'
+			},
+			ga: {
+				name: 'Google Analytics'
+			},
+			gtm: {
+				name: 'Google Tag Manager'
+			},
+			gts: {
+				name: 'Google Certified Shops'
 			}
+		}
+	},
 
-    		this.renderProducts(products);
-	    },
+	/*
+	 * @param {string} eventType - The name of the event type
+	 */
+	track: function (eventType) {
+        var _trackEvent;
 
-	    "toggleView": function() {
-	    	$(event.currentTarget).toggleClass('fa-list-alt fa-th');
-	    	$('.all-products').toggleClass('list-view grid-view');
-	    }
+        if (!eventType) {
+            return;
+        }
 
-    }
+        if (Object.keys(this.list()).includes(eventType.toLowerCase())) {
+            _trackEvent = "_track" + toCamelCase(eventType);
+            this[_trackEvent].apply(this, Array.prototype.slice.call(arguments, 1));
+        }
+    },
 
+	_trackAw: function (eventName, options) {
+		console.log('AdWords: ', eventName, options)
 
-    $(document).ready(function() {
-    	PLP_APP.init();
+		// Expected output: AdWords: Search, undefined
+
+		// Expected output: AdWords: SignIn, undefined
+	},
+    
+	_trackGa: function (eventName, options) {
+		console.log('Analytics: ', eventName, options)
+
+		// Expected output: Analytics: Purchase, {
+		// 	products: [123, 75, 402],
+		// 	discount: 18.98,
+		// 	total: 48.5
+		// }
+    },
+    
+	_trackGtm: function (eventName, options) {
+		console.log('Analytics: ', eventName, options)
+	}
+}
+
+function toCamelCase(str) {
+    return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function(match) {
+        return match.charAt(match.length-1).toUpperCase();
     });
-}());
+}
+
+
+// Use cases
+Events.track()
+
+Events.track('aw', 'Search')
+
+Events.track('AW', 'SignIn')
+
+Events.track('gA', 'Purchase', {
+	products: [123, 75, 402],
+	discount: 18.98,
+	total: 48.5
+})
+
+
+// New use case
+Events.track('gtm', 'Conversion', {
+	id: 36,
+	discount: 5.49,
+	total: 12.79,
+	currency: 'GBP',
+	reference: 'c57f6ac1b7'
+})

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Sectio-3 progress bar using HTML5 and CSS£</title>
+  <link href="https://use.fontawesome.com/releases/v5.0.7/css/all.css" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css?family=Roboto&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/progress.css">
+</head>
+<body>
+	<header>
+	    <div class="container">
+				<a class="navbar-brand" href="https://www.lenstore.co.uk/" title="Lenstore.co.uk" ><img src="./images/default.gif" alt="Lenstore.co.uk"></a>
+	    </div>
+	</header>
+	<main class="container">
+        <h1>HTML5 Progress Bar</h1>
+		<section class="progress-bar">
+            <progress max="100" value="40" class="progress-bar-element">
+                <!-- Browsers that support HTML5 progress element will ignore the html inside `progress` element. Whereas older browsers will ignore the `progress` element and instead render the html inside it. -->
+                <div class="progress-bar">
+                    <span style="width: 40%">40%</span>
+                </div>
+            </progress>
+		</section>
+	</main>
+	<script src="js/app.js"></script>
+</body>
+</html>

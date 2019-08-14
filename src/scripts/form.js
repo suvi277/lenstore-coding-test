@@ -1,67 +1,83 @@
-var Validator = function(form) {
+var AutoComplete = function(form) {
     this.form = document.getElementById(form);
-    
-    this.formElements = {
-        name: {
-            reg: /^[a-zA-Z]{2,20}$/,
-            msg: 'Please enter valid Name'
-        },
-
-        surname: {
-            reg: /^[a-zA-Z]{2,20}$/,
-            msg: 'Please Enter valid Surname.'
-        },
-
-        email: {
-            reg: /^[a-z-0-9_+.-]+\@([a-z0-9-]+\.)+[a-z0-9]{2,7}$/i,
-            msg: 'Please Enter valid e-mail address.'
-        },
-
-        phone: {
-            reg: /^[\+]?[(]?[0-9]{3}[)]?[-\s\.]?[0-9]{3}[-\s\.]?[0-9]{4,6}$/im,
-            msg: 'Please enter a valid phone number'
-        },
-        password: {
-            reg:  /^(?=.*?[^\w\s]).{8,}$/,
-            msg: 'Must contain at least one special character and at least 8 or more characters'
-        }
-    };
+    this.input = document.querySelector('input');
+    this.resultContainer = document.getElementById("autocomplete-results");
 };
 
-Validator.prototype.bindEvents = function() {
-    if (this.form) {
-        this.form.addEventListener('submit', function(evt){
-            evt.preventDefault();
+AutoComplete.prototype.bindEvents = function() {
+    if (this.input) {
+        this.input.addEventListener('keyup', function(evt) {
+            input_val = evt.target.value;
 
-            for (var inputElem in this.formElements) {
-                this.validate(inputElem);
+        if (input_val.length > 2) {
+            this.resultContainer.innerHTML = '';
+            this.populateResult(input_val);
+        } else {
+            this.resultContainer.innerHTML = '';
+            this.resultContainer.style.display = 'none';
+        }
+        
+        }.bind(this));
+
+        document.addEventListener("click", function (e) {
+            if (!e.target.closest('form')) {
+                this.closeAutoCompleteList();
             }
         }.bind(this));
     }
 };
 
-Validator.prototype.validate = function(inputElem) {
-    var currentIpField = this.formElements[inputElem],
-        inputVal = document.getElementById(inputElem).value;
-    
-    if (!currentIpField.reg.test(inputVal)) {
-        this.handleError(inputElem, currentIpField.msg);
-    }
+AutoComplete.prototype.populateResult = function(val) {
+    var filteredData= [];
+
+    window.requestXHR = new XMLHttpRequest();
+
+    window.requestXHR.abort();
+    window.requestXHR.onreadystatechange = function(evt) {
+        if (evt.currentTarget.readyState == 4 && evt.currentTarget.status == 200) {
+            var response = JSON.parse(evt.currentTarget.responseText);
+
+            filteredData = response.filter(function(data) {
+                return data.label.toUpperCase().includes(val.toUpperCase());
+            });
+
+            for (var i = 0; i < filteredData.length; i++) {
+                this.createList(filteredData[i], val);
+            }
+        }
+    }.bind(this);
+
+    window.requestXHR.open("GET", "data/search-results.json");
+    window.requestXHR.send();
 };
 
-Validator.prototype.handleError = function(element, message) {
-    var inputField = document.getElementById(element),
-        liErrorMsg = inputField.nextElementSibling;
+AutoComplete.prototype.createList = function(currentData, val) {
+    var regex = new RegExp(val, 'gi'),
+        list,
+        link,
+        pName;
 
-    inputField.className = 'input-error';
-    liErrorMsg.innerText = message;
-    liErrorMsg.style.display = 'block';
+    pName = currentData.label.replace(regex, '<strong>' + val + '</strong>');
 
-    inputField.addEventListener('keyup', function(evt){
-        inputField.className = '';
-        liErrorMsg.style.display = 'none';
-    });
+    list = document.createElement('li');
+    link = document.createElement("a");
+    link.setAttribute('href', currentData.href);
+    link.innerHTML = pName;
+    link.innerHTML += '<span class="product-count">'+ currentData.duration + '</span>';
+    list.appendChild(link);
+
+    this.resultContainer.appendChild(list);
+    this.resultContainer.style.display = 'block';
+
+    list.addEventListener("click", function (e) {
+        e.preventDefault();
+        console.log(currentData);
+    }.bind(this));
 };
 
-var validator = new Validator('form');
-validator.bindEvents();
+AutoComplete.prototype.closeAutoCompleteList = function() {
+    this.resultContainer.style.display = 'none';
+}
+
+var autocomplete = new AutoComplete('form');
+autocomplete.bindEvents();

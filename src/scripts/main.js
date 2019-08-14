@@ -1,121 +1,86 @@
-'use strict';
-
-(function () {
-	var PLP_APP = {
-    	"init": function () {
-    		this.allProducts = [];
-	    	this.loadProductsData();
-	    	this.bindEvents();
-	    },
-
-	    "loadProductsData": function function_name(argument) {
-			$.getJSON("data/products.json", function( data ) {
-				this.allProducts = data;
-				this.filteredData = data;
-				this.sortProducts('asc-name', data);
-			}.bind(this));
-	    },
-
-	    "getAllProducts": function() {
-	    	return this.allProducts;
-	    },
-
-	    "setFilteredProducts": function(filteredData) {
-	    	this.filteredData = filteredData;
-	    },
-
-	    "renderProducts": function(data) {
-	    	var list = $('.all-products'),
-	    		hbsTemplate = $("#products-template").html(),
-	    		compiledTpl;
-			
-			compiledTpl = Handlebars.compile(hbsTemplate);
-			list.html(compiledTpl(data));
-
-			this.renderTotalProductsText(data.length);
-	    },
-
-	    "renderTotalProductsText": function(total) {
-	    	$('.total-products').text(total);
-	    },
-
-	    "bindEvents": function() {
-	    	$('.filter-data select').on('change', function(event){
-	    		var value = $(event.currentTarget).val(),
-	    			type = $(event.currentTarget).data('type');
-
-	    		this.filterProducts(value, type);
-	    	}.bind(this));
-
-	    	$('.sort-data select').on('change', function(event){
-	    		var value = $(event.currentTarget).val();
-
-	    		this.sortProducts(value, this.filteredData);
-	    	}.bind(this));
-
-	    	$('.view-type').on('click', function(event) {
-	    		this.toggleView(event);
-	    	}.bind(this));
-	    },
-
-	    "filterProducts": function(value, type) {
-	    	var products;
-
-	    	products = this.getAllProducts().filter(function (item) {
-		        return item[type].includes(value) || value === '/';
-	        });
-
-	    	this.setFilteredProducts(products);
-	    	this.renderProducts(products);
-	    },
-
-	    "sortProducts": function(value, data) {
-	    	var products = data;
-
-	    	switch(value) {
-			  	case 'desc-name':
-				    products = products.sort(function (p1, p2) {
-						if (p1.name > p2.name) return -1;
-						if (p1.name < p2.name) return 1;
-					});
-
-			    break;
-			  	case 'asc-name':
-				   	products = products.sort(function (p1, p2) {
-						if (p1.name > p2.name) return 1;
-						if (p1.name < p2.name) return -1;
-					});
-
-			    break;
-			   	case 'desc-price':
-				    products = products.sort(function (p1, p2) {
-						if (p1.price > p2.price) return -1;
-						if (p1.price < p2.price) return 1;
-					});
-
-			    break;
-			  	case 'asc-price':
-				   	products = products.sort(function (p1, p2) {
-						if (p1.price > p2.price) return 1;
-						if (p1.price < p2.price) return -1;
-					});
-
-			    break;
-			  	default:
+var Events = {
+	list: function () {
+		return {
+			aw: {
+				name: 'Google AdWords'
+			},
+			ga: {
+				name: 'Google Analytics'
+			},
+			gtm: {
+				name: 'Google Tag Manager'
+			},
+			gts: {
+				name: 'Google Certified Shops'
 			}
+		}
+	},
 
-    		this.renderProducts(products);
-	    },
+	/*
+	 * @param {string} eventType - The name of the event type
+	 */
+	track: function (eventType) {
+        var _trackEvent;
 
-	    "toggleView": function() {
-	    	$(event.currentTarget).toggleClass('fa-list-alt fa-th');
-	    	$('.all-products').toggleClass('list-view grid-view');
-	    }
+        if (!eventType) {
+            return;
+        }
 
-    }
+        if (Object.keys(this.list()).includes(eventType.toLowerCase())) {
+            _trackEvent = "_track" + toCamelCase(eventType);
+            this[_trackEvent].apply(this, Array.prototype.slice.call(arguments, 1));
+        }
+    },
 
+	_trackAw: function (eventName, options) {
+		console.log('AdWords: ', eventName, options)
 
-    $(document).ready(function() {
-    	PLP_APP.init();
+		// Expected output: AdWords: Search, undefined
+
+		// Expected output: AdWords: SignIn, undefined
+	},
+    
+	_trackGa: function (eventName, options) {
+		console.log('Analytics: ', eventName, options)
+
+		// Expected output: Analytics: Purchase, {
+		// 	products: [123, 75, 402],
+		// 	discount: 18.98,
+		// 	total: 48.5
+		// }
+    },
+    
+	_trackGtm: function (eventName, options) {
+		console.log('Analytics: ', eventName, options)
+	}
+}
+
+function toCamelCase(str) {
+    return str.toLowerCase().replace(/(?:(^.)|(\s+.))/g, function(match) {
+        return match.charAt(match.length-1).toUpperCase();
     });
-}());
+}
+
+
+// Use cases
+Events.track()
+
+Events.track('aw', 'Search')
+
+Events.track('AW', 'SignIn')
+
+Events.track('gA', 'Purchase', {
+	products: [123, 75, 402],
+	discount: 18.98,
+	total: 48.5
+})
+
+
+// New use case
+Events.track('gtm', 'Conversion', {
+	id: 36,
+	discount: 5.49,
+	total: 12.79,
+	currency: 'GBP',
+	reference: 'c57f6ac1b7'
+})

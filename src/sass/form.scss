@@ -1,0 +1,51 @@
+* {
+    box-sizing: border-box;
+}
+
+form {
+    margin: 20px auto;
+    width: 50%;
+
+    .search-box {
+        position: relative;
+    }
+
+    input {
+        width: 100%;
+        margin: 0;
+        padding: 15px;
+    }
+
+    button {
+        position: absolute;
+        right: 0;
+        padding: 17px;
+        background-color: #33b6d1;
+        color: #fff;
+        border: 0;
+        top: 0;
+    }
+}
+
+.autocomplete-results {
+    border: 1px solid #ccc;
+    display: none;
+    margin: 0;
+    padding: 0;
+
+    li {
+        list-style: none;
+        padding: 10px 15px;
+    }
+
+    a {
+        color: #333;
+        text-decoration: none;
+    }
+
+    .product-count {
+        color: #666;
+        font-size: 12px;
+        float: right;
+    }
+}
